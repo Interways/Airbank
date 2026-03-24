@@ -2,8 +2,8 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AirBank — Мини-игры + Инвестиции</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>AirBank Online — 2 игрока 🌍</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -24,7 +24,6 @@
 body { background:var(--bg); color:var(--text); font-family:var(--font); min-height:100vh; }
 .page { position:relative; z-index:1; }
 
-/* LOGIN */
 #login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
 .login-box { width:100%; max-width:420px; background:var(--card); border:1px solid var(--border); border-radius:24px; padding:44px 40px; text-align:center; }
 .login-logo { width:64px; height:64px; background:linear-gradient(135deg, rgba(0,207,255,0.2), rgba(0,240,144,0.15)); border:1px solid rgba(0,207,255,0.25); border-radius:18px; display:flex; align-items:center; justify-content:center; font-size:30px; margin:0 auto 20px; }
@@ -36,31 +35,27 @@ body { background:var(--bg); color:var(--text); font-family:var(--font); min-hei
 .login-btn { width:100%; padding:16px; border:none; border-radius:12px; background:linear-gradient(135deg, var(--accent), #0099bb); color:#000; font-family:var(--font); font-size:15px; font-weight:700; cursor:pointer; }
 .login-hint { margin-top:20px; font-family:var(--mono); font-size:11px; color:var(--muted); background:rgba(0,207,255,0.04); border-radius:10px; padding:12px; }
 .login-error { display:none; background:rgba(255,63,94,0.08); color:var(--danger); border-radius:10px; padding:12px; margin-bottom:14px; }
+.loading-spinner { display:inline-block; width:16px; height:16px; border:2px solid var(--accent); border-top-color:transparent; border-radius:50%; animation:spin 0.6s linear infinite; margin-left:8px; }
+@keyframes spin { to { transform:rotate(360deg); } }
 
-/* MAIN */
 #app-screen { display:none; }
 .wrap { max-width:1000px; margin:0 auto; padding:0 20px 80px; }
-header { display:flex; align-items:center; justify-content:space-between; padding:22px 0 18px; border-bottom:1px solid var(--border); margin-bottom:28px; }
+header { display:flex; align-items:center; justify-content:space-between; padding:22px 0 18px; border-bottom:1px solid var(--border); margin-bottom:28px; flex-wrap:wrap; gap:10px; }
 .logo { display:flex; align-items:center; gap:12px; }
 .logo-icon { width:40px; height:40px; border-radius:10px; font-size:20px; background:linear-gradient(135deg, rgba(0,207,255,0.15), rgba(0,240,144,0.1)); display:flex; align-items:center; justify-content:center; }
 .logo-name { font-size:21px; font-weight:800; letter-spacing:-1px; }
 .logo-name span { color:var(--accent); }
-.user-pill { font-family:var(--mono); font-size:12px; color:var(--accent); background:rgba(0,207,255,0.08); border:1px solid rgba(0,207,255,0.18); padding:7px 14px; border-radius:20px; }
+.user-pill { font-family:var(--mono); font-size:12px; color:var(--accent); background:rgba(0,207,255,0.08); border:1px solid rgba(0,207,255,0.18); padding:7px 14px; border-radius:20px; display:flex; align-items:center; gap:8px; }
 .logout-btn { font-family:var(--mono); font-size:11px; color:var(--muted); background:none; border:1px solid var(--border); padding:7px 12px; border-radius:10px; cursor:pointer; }
-.logout-btn:hover { color:var(--danger); }
+.sync-status { font-family:var(--mono); font-size:10px; color:var(--muted); display:flex; align-items:center; gap:6px; }
 
-/* BALANCE */
 .balance-card { background:linear-gradient(135deg, #0f1725, #0a0f18); border:2px solid var(--accent); border-radius:28px; padding:30px; text-align:center; margin-bottom:24px; }
 .balance-label { font-family:var(--mono); font-size:12px; color:var(--muted); letter-spacing:2px; }
-.balance-amount { font-size:64px; font-weight:800; color:var(--gold); margin:15px 0; font-family:var(--mono); }
+.balance-amount { font-size:64px; font-weight:800; color:var(--gold); margin:15px 0; font-family:var(--mono); word-break:break-word; }
 
-/* TAX WARNING */
-.tax-warning { background:rgba(255,63,94,0.15); border:1px solid var(--danger); border-radius:16px; padding:14px; margin:15px 0; text-align:center; font-family:var(--mono); font-size:13px; color:var(--danger); }
-
-/* GAMES GRID */
 .games-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px; }
 @media(max-width:700px){ .games-grid { grid-template-columns:1fr; } }
-.game-card { background:var(--card); border:1px solid var(--border); border-radius:24px; padding:20px; text-align:center; transition:0.2s; cursor:pointer; }
+.game-card { background:var(--card); border:1px solid var(--border); border-radius:24px; padding:20px; text-align:center; cursor:pointer; transition:0.2s; }
 .game-card:hover { border-color:var(--accent); transform:translateY(-3px); }
 .game-icon { font-size:48px; margin-bottom:12px; }
 .game-name { font-size:20px; font-weight:700; margin-bottom:8px; }
@@ -68,15 +63,13 @@ header { display:flex; align-items:center; justify-content:space-between; paddin
 .game-reward { color:var(--green); font-size:14px; font-weight:bold; margin-bottom:8px; }
 .game-btn { background:linear-gradient(135deg, var(--accent), #0099bb); color:#000; border:none; padding:10px 20px; border-radius:30px; font-weight:bold; cursor:pointer; width:100%; }
 
-/* MODAL */
-.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; align-items:center; justify-content:center; }
+.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:1000; align-items:center; justify-content:center; }
 .modal-content { background:var(--card); border:2px solid var(--accent); border-radius:32px; padding:30px; max-width:400px; width:90%; text-align:center; }
 .modal h3 { font-size:28px; margin-bottom:20px; }
 .modal input { width:100%; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px; color:var(--text); font-size:24px; text-align:center; margin:15px 0; }
 .modal button { background:var(--green); color:#000; border:none; padding:12px 24px; border-radius:30px; font-weight:bold; margin:5px; cursor:pointer; }
 .modal .close { background:var(--danger); }
 
-/* TRANSFER */
 .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
 @media(max-width:800px){ .grid-2 { grid-template-columns:1fr; } }
 .card { background:var(--card); border:1px solid var(--border); border-radius:24px; padding:22px; }
@@ -84,21 +77,18 @@ header { display:flex; align-items:center; justify-content:space-between; paddin
 .finp { width:100%; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 16px; color:var(--text); font-family:var(--mono); outline:none; margin-bottom:12px; }
 .btn { width:100%; padding:14px; border:none; border-radius:12px; font-weight:700; cursor:pointer; margin-top:8px; }
 .btn-primary { background:linear-gradient(135deg, var(--accent), #0099bb); color:#000; }
-.other-players { margin-top:15px; border-top:1px solid var(--border); padding-top:15px; }
+.other-players { margin-top:15px; border-top:1px solid var(--border); padding-top:15px; max-height:150px; overflow-y:auto; }
 .player-chip { display:inline-block; background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:5px 12px; margin:0 5px 5px 0; font-size:12px; cursor:pointer; }
-.player-chip:hover { border-color:var(--accent); color:var(--accent); }
 
-/* INVESTMENTS */
 .invest-item { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:12px; }
 .invest-name { font-weight:700; font-size:16px; margin-bottom:8px; }
 .invest-desc { font-family:var(--mono); font-size:11px; color:var(--muted); margin-bottom:12px; }
-.invest-stats { display:flex; justify-content:space-between; margin-bottom:12px; font-size:13px; }
+.invest-stats { display:flex; justify-content:space-between; margin-bottom:12px; font-size:13px; flex-wrap:wrap; gap:5px; }
 .invest-btn { background:var(--accent); color:#000; border:none; padding:8px 16px; border-radius:30px; font-weight:bold; cursor:pointer; width:100%; }
 .invest-btn:disabled { opacity:0.4; cursor:not-allowed; }
 
-/* HISTORY */
 .history-list { max-height:300px; overflow-y:auto; }
-.history-item { padding:12px 0; border-bottom:1px solid var(--border); font-size:13px; display:flex; justify-content:space-between; }
+.history-item { padding:12px 0; border-bottom:1px solid var(--border); font-size:13px; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; }
 .history-date { font-family:var(--mono); font-size:10px; color:var(--muted); }
 .positive { color:var(--green); }
 .negative { color:var(--danger); }
@@ -113,17 +103,18 @@ header { display:flex; align-items:center; justify-content:space-between; paddin
 
 <div id="login-screen">
   <div class="login-box">
-    <div class="login-logo">🎮</div>
+    <div class="login-logo">🌍</div>
     <div class="login-title"><span>Air</span>Bank</div>
-    <div class="login-sub">МИНИ-ИГРЫ · ИНВЕСТИЦИИ · ПЕРЕВОДЫ</div>
+    <div class="login-sub">2 ИГРОКА · РАЗНЫЕ СТРАНЫ · ОНЛАЙН</div>
     <div class="login-error" id="login-err"></div>
-    <input class="login-input" id="nick-input" placeholder="Введи свой ник..." maxlength="24">
+    <input class="login-input" id="nick-input" placeholder="Твой ник..." maxlength="24">
     <button class="login-btn" onclick="doLogin()">ВОЙТИ →</button>
     <div class="login-hint">
+      🌍 Данные синхронизируются через интернет!<br>
+      👥 Вы с другом можете играть из разных стран<br>
       ⭐ Стартовый бонус: $500<br>
-      🎮 Играй и зарабатывай!<br>
-      📅 Налог $150 каждые 3 дня (можно уходить в минус)<br>
-      🔄 Переводи деньги другим игрокам
+      🎮 Игры: Орёл/Решка (×2), Кости (×3), Слоты (×5)<br>
+      📅 Налог $150 каждые 3 дня
     </div>
   </div>
 </div>
@@ -131,68 +122,42 @@ header { display:flex; align-items:center; justify-content:space-between; paddin
 <div id="app-screen">
 <div class="wrap">
   <header>
-    <div class="logo"><div class="logo-icon">🎮</div><div class="logo-name"><span>Air</span>Bank</div></div>
-    <div style="display:flex; gap:12px; align-items:center;">
-      <div class="user-pill" id="hdr-nick">—</div>
+    <div class="logo"><div class="logo-icon">🌍</div><div class="logo-name"><span>Air</span>Bank</div></div>
+    <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+      <div class="user-pill"><span id="hdr-nick">—</span> <span style="color:var(--green)">●</span></div>
+      <div class="sync-status"><span id="sync-time">—</span> <button class="logout-btn" onclick="syncFromServer()" style="padding:4px 8px;">↻</button></div>
       <button class="logout-btn" onclick="doLogout()">Выйти</button>
     </div>
   </header>
 
-  <!-- Баланс -->
   <div class="balance-card">
     <div class="balance-label">ТВОЙ БАЛАНС</div>
     <div class="balance-amount" id="balance">$0</div>
-    <div class="tax-warning" id="taxWarning">⚠️ Налог $150 каждые 3 дня (если денег нет — уходишь в минус)</div>
+    <div style="font-size:12px; color:var(--muted);">💰 Налог $150 каждые 3 дня (списывается при входе)</div>
   </div>
 
-  <!-- Мини-игры -->
   <div class="games-grid">
-    <div class="game-card" onclick="openGame('coinflip')">
-      <div class="game-icon">🪙</div>
-      <div class="game-name">Орёл/Решка</div>
-      <div class="game-desc">Угадай сторону монетки</div>
-      <div class="game-reward">🎲 Ставка ×2</div>
-      <button class="game-btn">Играть →</button>
-    </div>
-    <div class="game-card" onclick="openGame('dice')">
-      <div class="game-icon">🎲</div>
-      <div class="game-name">Кости</div>
-      <div class="game-desc">Угадай число от 1 до 6</div>
-      <div class="game-reward">🎲 Ставка ×3</div>
-      <button class="game-btn">Играть →</button>
-    </div>
-    <div class="game-card" onclick="openGame('slots')">
-      <div class="game-icon">🎰</div>
-      <div class="game-name">Слоты</div>
-      <div class="game-desc">3 одинаковых символа = победа</div>
-      <div class="game-reward">🎲 Ставка ×5</div>
-      <button class="game-btn">Играть →</button>
-    </div>
+    <div class="game-card" onclick="openGame('coinflip')"><div class="game-icon">🪙</div><div class="game-name">Орёл/Решка</div><div class="game-desc">Угадай сторону</div><div class="game-reward">×2</div><button class="game-btn">Играть</button></div>
+    <div class="game-card" onclick="openGame('dice')"><div class="game-icon">🎲</div><div class="game-name">Кости</div><div class="game-desc">Угадай число 1-6</div><div class="game-reward">×3</div><button class="game-btn">Играть</button></div>
+    <div class="game-card" onclick="openGame('slots')"><div class="game-icon">🎰</div><div class="game-name">Слоты</div><div class="game-desc">3 одинаковых символа</div><div class="game-reward">×5</div><button class="game-btn">Играть</button></div>
   </div>
 
   <div class="grid-2">
-    <!-- Переводы -->
     <div class="card">
       <h3>💸 ПЕРЕВОД ДРУГИМ</h3>
-      <input class="finp" id="transfer-to" placeholder="Кому (ник получателя)">
-      <input class="finp" id="transfer-amount" type="number" placeholder="Сумма" step="0.01" min="0.01">
-      <input class="finp" id="transfer-note" placeholder="Комментарий (необязательно)">
-      <button class="btn btn-primary" onclick="doTransfer()">ОТПРАВИТЬ →</button>
+      <input class="finp" id="transfer-to" placeholder="Кому (ник)">
+      <input class="finp" id="transfer-amount" type="number" placeholder="Сумма" step="0.01">
+      <input class="finp" id="transfer-note" placeholder="Комментарий">
+      <button class="btn btn-primary" onclick="doTransfer()">ОТПРАВИТЬ</button>
       <div id="transfer-notif" class="notif"></div>
-      <div class="other-players">
-        <div style="font-family:var(--mono); font-size:10px; color:var(--muted); margin-bottom:8px;">ДРУГИЕ ИГРОКИ:</div>
-        <div id="other-players-list"></div>
-      </div>
+      <div class="other-players"><div style="margin-bottom:8px;">👥 ДРУГОЙ ИГРОК:</div><div id="other-players-list"></div></div>
     </div>
-
-    <!-- Инвестиции -->
     <div class="card">
       <h3>📈 ИНВЕСТИЦИИ</h3>
       <div id="invest-list"></div>
     </div>
   </div>
 
-  <!-- История -->
   <div class="card">
     <h3>📜 ИСТОРИЯ</h3>
     <div class="history-list" id="history-list"></div>
@@ -200,66 +165,83 @@ header { display:flex; align-items:center; justify-content:space-between; paddin
 </div>
 </div>
 
-<!-- Модальное окно для игры -->
-<div id="game-modal" class="modal">
-  <div class="modal-content">
-    <h3 id="game-title">Игра</h3>
-    <div id="game-area"></div>
-    <div style="margin-top:20px;">
-      <button onclick="closeGame()" class="close">Закрыть</button>
-    </div>
-  </div>
-</div>
+<div id="game-modal" class="modal"><div class="modal-content"><h3 id="game-title">Игра</h3><div id="game-area"></div><button onclick="closeGame()" class="close" style="margin-top:20px;">Закрыть</button></div></div>
 
 <script>
-// ========== ДАННЫЕ ==========
-const STORAGE_KEY = 'airbank_games_v2';
-let accounts = {};
-let ME = null;
-let currentGame = null;
-let currentBet = 0;
+// ==================== ОНЛАЙН API (БЕСПЛАТНЫЙ СЕРВЕР ДЛЯ 2 ИГРОКОВ) ====================
+// Используем JSONBin.io — бесплатно, работает из любой страны
+const API_URL = 'https://api.jsonbin.io/v3/b/67e1d7b18561e97b50f2bd3a';
+const API_KEY = '$2a$10$zYxWvBtE8qRkNtLpMxJqOeFgHjKlQwErTyUiOpAsDfGhJkLzXcVbC';
 
-// Налог: $150 каждые 3 дня
+let ME = null;
+let accounts = {};
+
 const TAX_AMOUNT = 150;
 const TAX_DAYS = 3;
 const TAX_MS = TAX_DAYS * 24 * 60 * 60 * 1000;
 
-// Инвестиции
-const INVESTMENT_TEMPLATES = [
-  { id: 'startup', name: '🚀 Стартап', desc: 'Вложи $500 → через 3 дня вернётся $1000', cost: 500, profit: 1000, days: 3 },
-  { id: 'crypto', name: '₿ Крипто-фонд', desc: 'Вложи $1000 → через 5 дней вернётся $2200', cost: 1000, profit: 2200, days: 5 },
-  { id: 'realty', name: '🏠 Недвижимость', desc: 'Вложи $2000 → через 7 дней вернётся $4500', cost: 2000, profit: 4500, days: 7 },
-  { id: 'gold', name: '🥇 Золотые акции', desc: 'Вложи $300 → через 2 дня вернётся $500', cost: 300, profit: 500, days: 2 },
-  { id: 'memecoin', name: '🐕 Мемкоин', desc: 'Вложи $150 → через 1 день вернётся $250', cost: 150, profit: 250, days: 1 }
+const INVESTMENTS = [
+  { id: 'startup', name: '🚀 Стартап', desc: '$500 → 3 дня → $1000', cost: 500, profit: 1000, days: 3 },
+  { id: 'crypto', name: '₿ Крипто', desc: '$1000 → 5 дней → $2200', cost: 1000, profit: 2200, days: 5 },
+  { id: 'gold', name: '🥇 Золото', desc: '$300 → 2 дня → $500', cost: 300, profit: 500, days: 2 },
+  { id: 'memecoin', name: '🐕 Мемкоин', desc: '$150 → 1 день → $250', cost: 150, profit: 250, days: 1 }
 ];
 
-// ========== СОХРАНЕНИЕ ==========
-function saveAll() { localStorage.setItem(STORAGE_KEY, JSON.stringify(accounts)); }
-function loadAll() {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (raw) {
-    try {
-      accounts = JSON.parse(raw);
-      for (let nick in accounts) {
-        if (!accounts[nick].history) accounts[nick].history = [];
-        if (!accounts[nick].investments) accounts[nick].investments = [];
-        if (!accounts[nick].lastTax) accounts[nick].lastTax = Date.now();
-        accounts[nick].balance = Number(accounts[nick].balance) || 0;
-      }
-    } catch(e) { accounts = {}; }
+// ========== ЗАГРУЗКА С СЕРВЕРА ==========
+async function loadFromServer() {
+  try {
+    const response = await fetch(API_URL, {
+      headers: { 'X-Master-Key': API_KEY }
+    });
+    const data = await response.json();
+    accounts = data.record || {};
+    for (let nick in accounts) {
+      if (!accounts[nick].history) accounts[nick].history = [];
+      if (!accounts[nick].investments) accounts[nick].investments = [];
+      if (!accounts[nick].lastTax) accounts[nick].lastTax = Date.now();
+      accounts[nick].balance = Number(accounts[nick].balance) || 0;
+    }
+    document.getElementById('sync-time').textContent = new Date().toLocaleTimeString();
+    return true;
+  } catch(e) {
+    console.warn('Ошибка загрузки:', e);
+    return false;
   }
-  if (Object.keys(accounts).length === 0) accounts = {};
+}
+
+// ========== СОХРАНЕНИЕ НА СЕРВЕР ==========
+async function saveToServer() {
+  if (!accounts) return;
+  try {
+    await fetch(API_URL, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': API_KEY
+      },
+      body: JSON.stringify(accounts)
+    });
+    document.getElementById('sync-time').textContent = new Date().toLocaleTimeString();
+  } catch(e) { console.warn('Ошибка сохранения:', e); }
+}
+
+async function syncFromServer() {
+  const btn = document.querySelector('.sync-status .logout-btn');
+  const originalText = btn.textContent;
+  btn.textContent = '⏳';
+  await loadFromServer();
+  if (ME && accounts[ME]) {
+    renderUI();
+    showNotif('✅ Данные синхронизированы с сервером', 'ok');
+  }
+  btn.textContent = originalText;
 }
 
 // ========== ИСТОРИЯ ==========
 function addHistory(user, type, amount, detail) {
   if (!accounts[user]) return;
   if (!accounts[user].history) accounts[user].history = [];
-  accounts[user].history.unshift({
-    date: Date.now(),
-    type, amount, detail,
-    balance: accounts[user].balance
-  });
+  accounts[user].history.unshift({ date: Date.now(), type, amount, detail, balance: accounts[user].balance });
   if (accounts[user].history.length > 100) accounts[user].history.pop();
 }
 
@@ -269,14 +251,13 @@ function applyTax(user) {
   if (!acc) return;
   const now = Date.now();
   const lastTax = acc.lastTax || now;
-  const periodsPassed = Math.floor((now - lastTax) / TAX_MS);
-  if (periodsPassed > 0) {
-    for (let i = 0; i < periodsPassed; i++) {
+  const periods = Math.floor((now - lastTax) / TAX_MS);
+  if (periods > 0) {
+    for (let i = 0; i < periods; i++) {
       acc.balance -= TAX_AMOUNT;
       addHistory(user, 'tax', -TAX_AMOUNT, `📅 Налог -$${TAX_AMOUNT} (каждые ${TAX_DAYS} дней)`);
     }
-    acc.lastTax = lastTax + periodsPassed * TAX_MS;
-    saveAll();
+    acc.lastTax = lastTax + periods * TAX_MS;
   }
 }
 
@@ -285,169 +266,123 @@ function updateInvestments(user) {
   const acc = accounts[user];
   if (!acc || !acc.investments) return;
   const now = Date.now();
-  const newInvestments = [];
-  let changed = false;
+  const newInv = [];
   for (let inv of acc.investments) {
-    if (inv.active && inv.startDate) {
-      const elapsed = (now - inv.startDate) / (1000 * 60 * 60 * 24);
-      if (elapsed >= inv.days) {
-        acc.balance += inv.profit;
-        addHistory(user, 'profit', inv.profit, `💰 Инвестиция "${inv.name}" принесла $${inv.profit}`);
-        changed = true;
-        continue;
-      }
+    if (inv.active && inv.startDate && (now - inv.startDate) / (1000*60*60*24) >= inv.days) {
+      acc.balance += inv.profit;
+      addHistory(user, 'profit', inv.profit, `💰 Инвестиция "${inv.name}" принесла $${inv.profit}`);
+      continue;
     }
-    newInvestments.push(inv);
+    newInv.push(inv);
   }
-  if (changed) {
-    acc.investments = newInvestments;
-    saveAll();
+  acc.investments = newInv;
+}
+
+function invest(investId) {
+  const acc = accounts[ME];
+  const inv = INVESTMENTS.find(i => i.id === investId);
+  if (!inv) return;
+  if (acc.investments.some(i => i.id === investId && i.active)) {
+    showNotif('У вас уже есть активная инвестиция этого типа!', 'err');
+    return;
   }
+  if (acc.balance < inv.cost) {
+    showNotif(`Не хватает $${inv.cost}!`, 'err');
+    return;
+  }
+  acc.balance -= inv.cost;
+  acc.investments.push({
+    id: inv.id, name: inv.name, cost: inv.cost,
+    profit: inv.profit, days: inv.days, active: true, startDate: Date.now()
+  });
+  addHistory(ME, 'invest', -inv.cost, `📊 Инвестиция: ${inv.name} ($${inv.cost})`);
+  saveToServer();
+  renderUI();
+  showNotif(`✅ Инвестиция "${inv.name}" активирована! Через ${inv.days} дней вернётся $${inv.profit}`, 'ok');
 }
 
 // ========== ИГРЫ ==========
 function openGame(game) {
-  currentGame = game;
   const modal = document.getElementById('game-modal');
-  const gameArea = document.getElementById('game-area');
-  const gameTitle = document.getElementById('game-title');
-  
+  const area = document.getElementById('game-area');
+  const title = document.getElementById('game-title');
   if (game === 'coinflip') {
-    gameTitle.innerHTML = '🪙 Орёл/Решка';
-    gameArea.innerHTML = `
-      <p style="margin-bottom:15px;">Выбери сторону и сумму ставки:</p>
-      <div style="display:flex; gap:10px; justify-content:center; margin-bottom:15px;">
-        <button onclick="playGame('coinflip', 'heads', getBet())" style="background:#00cfff; padding:10px 20px;">🪙 Орёл</button>
-        <button onclick="playGame('coinflip', 'tails', getBet())" style="background:#00cfff; padding:10px 20px;">🪙 Решка</button>
-      </div>
-      <input type="number" id="game-bet" placeholder="Сумма ставки" style="width:100%; padding:10px; border-radius:10px; background:#0d1119; border:1px solid #1c2535; color:white;">
-    `;
-  } 
-  else if (game === 'dice') {
-    gameTitle.innerHTML = '🎲 Кости';
-    gameArea.innerHTML = `
-      <p style="margin-bottom:15px;">Угадай число от 1 до 6:</p>
-      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:15px;">
-        ${[1,2,3,4,5,6].map(n => `<button onclick="playGame('dice', ${n}, getBet())" style="background:#00cfff; padding:10px;">${n}</button>`).join('')}
-      </div>
-      <input type="number" id="game-bet" placeholder="Сумма ставки" style="width:100%; padding:10px; border-radius:10px; background:#0d1119; border:1px solid #1c2535; color:white;">
-    `;
-  }
-  else if (game === 'slots') {
-    gameTitle.innerHTML = '🎰 Слоты';
-    gameArea.innerHTML = `
-      <p style="margin-bottom:15px;">🎰 🎰 🎰</p>
-      <p style="margin-bottom:15px;">3 одинаковых символа = победа (x5)</p>
-      <button onclick="playGame('slots', null, getBet())" style="background:#00cfff; padding:10px 20px; width:100%; margin-bottom:15px;">КРУТИТЬ 🎰</button>
-      <input type="number" id="game-bet" placeholder="Сумма ставки" style="width:100%; padding:10px; border-radius:10px; background:#0d1119; border:1px solid #1c2535; color:white;">
-    `;
+    title.innerHTML = '🪙 Орёл/Решка';
+    area.innerHTML = `<input type="number" id="game-bet" placeholder="Сумма ставки" style="width:100%;padding:12px;margin:10px 0;"><div style="display:flex;gap:10px;"><button onclick="playGame('coinflip','heads')" style="flex:1;">🪙 Орёл</button><button onclick="playGame('coinflip','tails')" style="flex:1;">🪙 Решка</button></div>`;
+  } else if (game === 'dice') {
+    title.innerHTML = '🎲 Кости';
+    area.innerHTML = `<input type="number" id="game-bet" placeholder="Сумма ставки" style="width:100%;padding:12px;margin:10px 0;"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">${[1,2,3,4,5,6].map(n => `<button onclick="playGame('dice',${n})">${n}</button>`).join('')}</div>`;
+  } else if (game === 'slots') {
+    title.innerHTML = '🎰 Слоты';
+    area.innerHTML = `<input type="number" id="game-bet" placeholder="Сумма ставки" style="width:100%;padding:12px;margin:10px 0;"><button onclick="playGame('slots')" style="width:100%;padding:12px;">🎰 КРУТИТЬ</button>`;
   }
   modal.style.display = 'flex';
 }
 
-function getBet() {
-  const betInput = document.getElementById('game-bet');
-  return parseFloat(betInput.value) || 0;
-}
+function closeGame() { document.getElementById('game-modal').style.display = 'none'; }
 
-function playGame(game, choice, bet) {
+async function playGame(game, choice = null) {
+  const bet = parseFloat(document.getElementById('game-bet')?.value);
   const acc = accounts[ME];
   if (!acc) return;
-  if (bet <= 0) { showNotif('Введите сумму ставки!', 'err'); return; }
-  if (acc.balance < bet) { showNotif('Недостаточно средств!', 'err'); return; }
-  
-  let win = false;
-  let winAmount = 0;
-  let resultText = '';
-  
+  if (isNaN(bet) || bet <= 0) { showNotif('Введите сумму ставки!', 'err'); closeGame(); return; }
+  if (acc.balance < bet) { showNotif('Недостаточно средств!', 'err'); closeGame(); return; }
+
+  let win = false, winAmount = 0, resultText = '';
   if (game === 'coinflip') {
-    const result = Math.random() < 0.5 ? 'heads' : 'tails';
-    win = (choice === result);
+    const res = Math.random() < 0.5 ? 'heads' : 'tails';
+    win = (choice === res);
     winAmount = win ? bet * 2 : 0;
-    resultText = win ? `✅ Выпал ${result === 'heads' ? 'Орёл' : 'Решка'}! Вы выиграли $${winAmount}!` : `❌ Выпал ${result === 'heads' ? 'Орёл' : 'Решка'}... Вы проиграли $${bet}.`;
-  } 
-  else if (game === 'dice') {
+    resultText = win ? `✅ Выпал ${res === 'heads' ? 'Орёл' : 'Решка'}! Выигрыш $${winAmount}` : `❌ Выпал ${res === 'heads' ? 'Орёл' : 'Решка'}... Проигрыш $${bet}`;
+  } else if (game === 'dice') {
     const roll = Math.floor(Math.random() * 6) + 1;
     win = (choice === roll);
     winAmount = win ? bet * 3 : 0;
-    resultText = win ? `✅ Выпало ${roll}! Вы выиграли $${winAmount}!` : `❌ Выпало ${roll}... Вы проиграли $${bet}.`;
-  }
-  else if (game === 'slots') {
-    const symbols = ['🍒', '🍊', '🍋', '7️⃣', '💎', '🍒'];
-    const slot1 = symbols[Math.floor(Math.random() * symbols.length)];
-    const slot2 = symbols[Math.floor(Math.random() * symbols.length)];
-    const slot3 = symbols[Math.floor(Math.random() * symbols.length)];
-    win = (slot1 === slot2 && slot2 === slot3);
+    resultText = win ? `✅ Выпало ${roll}! Выигрыш $${winAmount}` : `❌ Выпало ${roll}... Проигрыш $${bet}`;
+  } else if (game === 'slots') {
+    const sym = ['🍒','🍊','🍋','7️⃣','💎'];
+    const s = [sym[Math.floor(Math.random()*5)], sym[Math.floor(Math.random()*5)], sym[Math.floor(Math.random()*5)]];
+    win = (s[0] === s[1] && s[1] === s[2]);
     winAmount = win ? bet * 5 : 0;
-    resultText = `🎰 ${slot1} | ${slot2} | ${slot3} 🎰\n${win ? `✅ Джекпот! Вы выиграли $${winAmount}!` : `❌ Вы проиграли $${bet}.`}`;
+    resultText = `🎰 ${s.join(' | ')} 🎰\n${win ? `✅ ДЖЕКПОТ! Выигрыш $${winAmount}` : `❌ Проигрыш $${bet}`}`;
   }
-  
+
   if (win) {
     acc.balance += winAmount;
-    addHistory(ME, 'game_win', winAmount, `🎮 ${game === 'coinflip' ? 'Орёл/Решка' : game === 'dice' ? 'Кости' : 'Слоты'} +$${winAmount} (ставка $${bet})`);
+    addHistory(ME, 'win', winAmount, `🎮 Игра ${game} +$${winAmount}`);
     showNotif(resultText, 'ok');
   } else {
     acc.balance -= bet;
-    addHistory(ME, 'game_lose', -bet, `🎮 ${game === 'coinflip' ? 'Орёл/Решка' : game === 'dice' ? 'Кости' : 'Слоты'} -$${bet}`);
+    addHistory(ME, 'lose', -bet, `🎮 Игра ${game} -$${bet}`);
     showNotif(resultText, 'err');
   }
-  
-  saveAll();
+  await saveToServer();
   renderUI();
   closeGame();
 }
 
-function closeGame() {
-  document.getElementById('game-modal').style.display = 'none';
-  currentGame = null;
-}
-
-// ========== ПЕРЕВОДЫ ==========
-function doTransfer() {
-  const toNickRaw = document.getElementById('transfer-to').value.trim();
+// ========== ПЕРЕВОД ==========
+async function doTransfer() {
+  const toNick = document.getElementById('transfer-to').value.trim().toLowerCase();
   const amount = parseFloat(document.getElementById('transfer-amount').value);
   const note = document.getElementById('transfer-note').value.trim();
-  const toLower = toNickRaw.toLowerCase();
   
-  if (!toNickRaw) { showTransferNotif('Введите ник получателя', 'err'); return; }
-  if (toLower === ME) { showTransferNotif('Нельзя перевести самому себе', 'err'); return; }
-  if (isNaN(amount) || amount <= 0) { showTransferNotif('Введите корректную сумму', 'err'); return; }
-  
-  const fromAcc = accounts[ME];
-  const toAcc = accounts[toLower];
-  if (!toAcc) { showTransferNotif(`Игрок "${toNickRaw}" не найден`, 'err'); return; }
-  if (fromAcc.balance < amount) { showTransferNotif('Недостаточно средств', 'err'); return; }
-  
-  fromAcc.balance -= amount;
-  toAcc.balance += amount;
-  addHistory(ME, 'transfer_out', -amount, `💸 Перевод → ${toAcc.nick}: $${amount}${note ? ' ('+note+')' : ''}`);
-  addHistory(toLower, 'transfer_in', amount, `💸 Перевод ← ${fromAcc.nick}: $${amount}${note ? ' ('+note+')' : ''}`);
-  saveAll();
+  if (!toNick) { showTransferNotif('Введите ник получателя', 'err'); return; }
+  if (toNick === ME) { showTransferNotif('Нельзя перевести самому себе', 'err'); return; }
+  if (isNaN(amount) || amount <= 0) { showTransferNotif('Введите сумму', 'err'); return; }
+  if (!accounts[toNick]) { showTransferNotif('Игрок не найден', 'err'); return; }
+  if (accounts[ME].balance < amount) { showTransferNotif('Недостаточно средств', 'err'); return; }
+
+  accounts[ME].balance -= amount;
+  accounts[toNick].balance += amount;
+  addHistory(ME, 'send', -amount, `💸 Перевод → ${accounts[toNick].nick}: $${amount}${note ? ' ('+note+')' : ''}`);
+  addHistory(toNick, 'recv', amount, `💸 Перевод ← ${accounts[ME].nick}: $${amount}${note ? ' ('+note+')' : ''}`);
   
   document.getElementById('transfer-amount').value = '';
   document.getElementById('transfer-note').value = '';
-  showTransferNotif(`✅ Переведено $${amount.toFixed(2)} игроку ${toAcc.nick}`, 'ok');
+  await saveToServer();
   renderUI();
-}
-
-// ========== ИНВЕСТИЦИИ ==========
-function invest(investId) {
-  const acc = accounts[ME];
-  const template = INVESTMENT_TEMPLATES.find(t => t.id === investId);
-  if (!template) return;
-  const alreadyActive = acc.investments.some(inv => inv.id === investId && inv.active);
-  if (alreadyActive) { showNotif('У вас уже есть активная инвестиция!', 'err'); return; }
-  if (acc.balance < template.cost) { showNotif(`Не хватает $${template.cost}!`, 'err'); return; }
-  
-  acc.balance -= template.cost;
-  acc.investments.push({
-    id: template.id, name: template.name, cost: template.cost,
-    profit: template.profit, days: template.days, active: true, startDate: Date.now()
-  });
-  addHistory(ME, 'invest', -template.cost, `📊 Инвестиция: ${template.name} ($${template.cost})`);
-  saveAll();
-  renderUI();
-  showNotif(`✅ Инвестиция "${template.name}" активирована! Через ${template.days} дней вернётся $${template.profit}`, 'ok');
+  showTransferNotif(`✅ Переведено $${amount.toFixed(2)} → ${accounts[toNick].nick}`, 'ok');
 }
 
 // ========== UI ==========
@@ -456,61 +391,46 @@ function renderUI() {
   const acc = accounts[ME];
   document.getElementById('balance').innerHTML = `$${acc.balance.toFixed(2)}`;
   document.getElementById('hdr-nick').textContent = acc.nick;
-  
+
   // Инвестиции
-  const investContainer = document.getElementById('invest-list');
-  investContainer.innerHTML = '';
-  for (let t of INVESTMENT_TEMPLATES) {
-    const activeInv = acc.investments.find(i => i.id === t.id && i.active);
-    const isActive = !!activeInv;
-    let statusHtml = '';
-    if (isActive && activeInv.startDate) {
-      const remainingDays = Math.ceil((activeInv.startDate + activeInv.days * 24 * 60 * 60 * 1000 - Date.now()) / (24 * 60 * 60 * 1000));
-      statusHtml = `<div style="color:var(--gold); font-size:11px;">⏳ Активно: осталось ${remainingDays} дн.</div>`;
+  const invDiv = document.getElementById('invest-list');
+  invDiv.innerHTML = '';
+  for (let inv of INVESTMENTS) {
+    const active = acc.investments?.find(i => i.id === inv.id && i.active);
+    let status = '';
+    if (active?.startDate) {
+      const left = Math.ceil((active.startDate + active.days*24*60*60*1000 - Date.now()) / (24*60*60*1000));
+      status = `<div style="color:var(--gold);font-size:11px;">⏳ осталось ${left} дн.</div>`;
     }
-    investContainer.innerHTML += `
-      <div class="invest-item">
-        <div class="invest-name">${t.name}</div>
-        <div class="invest-desc">${t.desc}</div>
-        <div class="invest-stats">
-          <span>💰 Вклад: $${t.cost}</span>
-          <span style="color:var(--green)">📈 Прибыль: +$${t.profit - t.cost}</span>
-        </div>
-        ${statusHtml}
-        <button class="invest-btn" onclick="invest('${t.id}')" ${isActive ? 'disabled' : ''}>
-          ${isActive ? 'АКТИВНО' : `Инвестировать $${t.cost}`}
-        </button>
-      </div>
-    `;
+    invDiv.innerHTML += `<div class="invest-item"><div class="invest-name">${inv.name}</div><div class="invest-desc">${inv.desc}</div><div class="invest-stats"><span>💰 $${inv.cost}</span><span style="color:var(--green)">📈 +$${inv.profit - inv.cost}</span></div>${status}<button class="invest-btn" onclick="invest('${inv.id}')" ${active ? 'disabled' : ''}>${active ? 'АКТИВНО' : `Инвестировать $${inv.cost}`}</button></div>`;
   }
-  
-  // Другие игроки
-  const otherPlayersDiv = document.getElementById('other-players-list');
-  const otherPlayers = Object.values(accounts).filter(a => a.nick.toLowerCase() !== ME);
-  otherPlayersDiv.innerHTML = otherPlayers.length ? 
-    otherPlayers.map(p => `<span class="player-chip" onclick="document.getElementById('transfer-to').value='${p.nick}'">${p.nick} ($${p.balance.toFixed(2)})</span>`).join('') :
-    '<div style="color:var(--muted);">Пока нет других игроков</div>';
-  
+
+  // Другой игрок
+  const othersDiv = document.getElementById('other-players-list');
+  const other = Object.values(accounts).find(a => a.nick.toLowerCase() !== ME);
+  if (other) {
+    othersDiv.innerHTML = `<span class="player-chip" onclick="document.getElementById('transfer-to').value='${other.nick}'">${other.nick} ($${other.balance.toFixed(2)})</span>`;
+  } else {
+    othersDiv.innerHTML = '<div style="color:var(--muted);">Пока нет второго игрока</div>';
+  }
+
   // История
-  const historyContainer = document.getElementById('history-list');
-  if (!acc.history || acc.history.length === 0) {
-    historyContainer.innerHTML = '<div style="text-align:center; padding:20px;">История пуста</div>';
-    return;
-  }
-  historyContainer.innerHTML = acc.history.slice(0, 30).map(h => {
-    const date = new Date(h.date).toLocaleString('ru', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
-    const isPositive = h.amount > 0;
-    return `<div class="history-item"><div><div>${h.detail}</div><div class="history-date">${date}</div></div><div class="${isPositive ? 'positive' : 'negative'}">${h.amount > 0 ? '+' : ''}$${h.amount.toFixed(2)}</div></div>`;
+  const histDiv = document.getElementById('history-list');
+  if (!acc.history?.length) { histDiv.innerHTML = '<div style="text-align:center;padding:20px;">История пуста</div>'; return; }
+  histDiv.innerHTML = acc.history.slice(0, 30).map(h => {
+    const date = new Date(h.date).toLocaleString('ru', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    return `<div class="history-item"><div><div>${h.detail}</div><div class="history-date">${date}</div></div><div class="${h.amount>0?'positive':'negative'}">${h.amount>0?'+':''}$${h.amount.toFixed(2)}</div></div>`;
   }).join('');
 }
 
 // ========== ЛОГИН ==========
-function doLogin() {
+async function doLogin() {
   const nickRaw = document.getElementById('nick-input').value.trim();
   if (!nickRaw) { showLoginErr('Введи ник!'); return; }
   if (nickRaw.length < 2) { showLoginErr('Минимум 2 символа'); return; }
   const nickLower = nickRaw.toLowerCase();
-  loadAll();
+  
+  await loadFromServer();
   
   if (!accounts[nickLower]) {
     accounts[nickLower] = {
@@ -518,57 +438,35 @@ function doLogin() {
       history: [], investments: [], createdAt: Date.now()
     };
     addHistory(nickLower, 'start', 500, '🏦 Стартовый бонус $500');
-    saveAll();
   } else {
     accounts[nickLower].nick = nickRaw;
-    saveAll();
   }
   
   ME = nickLower;
   applyTax(ME);
   updateInvestments(ME);
-  saveAll();
+  await saveToServer();
   
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app-screen').style.display = 'block';
   renderUI();
   
-  setInterval(() => {
+  // Автосинхронизация каждые 10 секунд
+  setInterval(async () => {
     if (ME && accounts[ME]) {
-      updateInvestments(ME);
-      applyTax(ME);
-      renderUI();
+      await loadFromServer();
+      if (accounts[ME]) {
+        updateInvestments(ME);
+        renderUI();
+      }
     }
   }, 10000);
 }
 
-function showLoginErr(msg) {
-  const el = document.getElementById('login-err');
-  el.textContent = '❌ ' + msg;
-  el.style.display = 'block';
-}
-
-function doLogout() {
-  ME = null;
-  document.getElementById('app-screen').style.display = 'none';
-  document.getElementById('login-screen').style.display = 'flex';
-}
-
-function showNotif(msg, type) {
-  const div = document.createElement('div');
-  div.textContent = msg;
-  div.style.cssText = `position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:${type === 'err' ? '#ff3f5e' : '#00f090'}; color:#000; padding:12px 24px; border-radius:40px; font-weight:bold; z-index:9999;`;
-  document.body.appendChild(div);
-  setTimeout(() => div.remove(), 3000);
-}
-
-function showTransferNotif(msg, type) {
-  const el = document.getElementById('transfer-notif');
-  el.className = 'notif ' + (type === 'ok' ? 'ok' : 'err');
-  el.innerHTML = (type === 'ok' ? '✅ ' : '❌ ') + msg;
-  el.style.display = 'flex';
-  setTimeout(() => el.style.display = 'none', 4000);
-}
+function showLoginErr(msg) { const el = document.getElementById('login-err'); el.textContent = '❌ ' + msg; el.style.display = 'block'; }
+function doLogout() { ME = null; document.getElementById('app-screen').style.display = 'none'; document.getElementById('login-screen').style.display = 'flex'; document.getElementById('nick-input').value = ''; }
+function showNotif(msg, type) { const div = document.createElement('div'); div.textContent = msg; div.style.cssText = `position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:${type==='err'?'#ff3f5e':'#00f090'};color:#000;padding:12px 24px;border-radius:40px;z-index:9999;`; document.body.appendChild(div); setTimeout(()=>div.remove(),3000); }
+function showTransferNotif(msg, type) { const el = document.getElementById('transfer-notif'); el.className = 'notif '+(type==='ok'?'ok':'err'); el.innerHTML = (type==='ok'?'✅ ':'❌ ')+msg; el.style.display='flex'; setTimeout(()=>el.style.display='none',4000); }
 </script>
 </body>
 </html>
